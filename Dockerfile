@@ -16,3 +16,4 @@ RUN pip install -e .
 
 # Run evaluation script
 ENTRYPOINT ["python", "/cage/CybORG/Evaluation/validation.py"]
+
