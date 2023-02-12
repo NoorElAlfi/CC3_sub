@@ -239,7 +239,7 @@ class PettingZooParallelWrapper(BaseWrapper):
             self.ip_addresses = list(self.env.get_ip_map().values())
             num_drones = len(self.ip_addresses)
             obs_length = int(1 + num_drones + 1 + num_drones + 2 + (num_drones - 1) * (2 + 1 + 1) + self.msg_len)
-            new_obs = np.zeros(obs_length, dtype=np.int)
+            new_obs = np.zeros(obs_length, dtype=np.int64)
             if obs is not None:
                 own_host_name = self.agent_host_map[agent]
                 # obs_length = success + own_drone(block Ips + processes + network conns) + other_drones_including_own(IPs + session_ + pos)
