@@ -28,7 +28,7 @@ EPS_DECAY = 1000
 # cuda:0, cpu, or mps
 
 class AgentDDQN():
-    def __init__(self, env, obs_set, action_set, agent_name, device='cpu'):
+    def __init__(self, env, obs_set, action_set, agent_name, device='cpu', restore=False, ckpt=None):
         self.device = torch.device(device)
         self.env = env
         self.agent_name = agent_name
@@ -39,6 +39,11 @@ class AgentDDQN():
         self.epsilon = EPS_START
         self.steps_done = 0
         self.build_network()
+        '''
+        if restore:
+            pretained_model = torch.load(ckpt, map_location=lambda storage, loc: storage)
+            self.policy.load_state_dict(pretained_model)
+        '''
 
     def build_network(self):
         self.Q_network = Model(self.action_number).to(self.device)
@@ -74,21 +79,6 @@ class AgentDDQN():
 
     def restore_epsilon(self):
         self.epsilon = self.epsilon_tmp
-
-    def save(self, step, logs_path):
-        os.makedirs(logs_path, exist_ok=True)
-        model_list = glob.glob(os.path.join(logs_path, '*.pth'))
-        if len(model_list) > Config.maximum_model - 1:
-            min_step = min([int(li.split('/')[-1][6:-4]) for li in model_list])
-            os.remove(os.path.join(logs_path, 'model-{}.pth' .format(min_step)))
-        logs_path = os.path.join(logs_path, 'model-{}.pth' .format(step))
-        self.Q_network.save(logs_path, step=step, optimizer=self.optimizer)
-        print('=> Save {}' .format(logs_path))
-
-    def restore(self, logs_path):
-        self.Q_network.load(logs_path)
-        self.target_network.load(logs_path)
-        print('=> Restore {}' .format(logs_path))
 
     def set_initial_values(self, action_space):
         if type(action_space) is dict:
@@ -146,9 +136,3 @@ class AgentDDQN():
 
     def update_parameters(current_model, target_model):
         target_model.load_state_dict(current_model.state_dict())
-
-    def end_episode(self):
-        pass
-        # self.scan_state = np.zeros(10)
-        # self.start_actions = [51, 116, 55]
-        # self.agent_loaded = False
