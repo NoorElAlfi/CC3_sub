@@ -31,6 +31,7 @@ class RemoveOtherSessions(LocalAction):
                                     (self.level == 'low' and session.username in ['NetworkService']):
                                 if (1-self.success_rate) < state.np_random.random():
                                     sus_pids.append(session.pid)
+                                    # print('!!! removing ', session.username, )
                                     obs.set_success(True)
             host = state.hosts[hostname]
             for sus_pid in sus_pids:
@@ -65,6 +66,7 @@ class RemoveOtherSessions_AlwaysSuccessful(LocalAction):
                             if session.username != 'hardware' and (self.level == 'privileged') or \
                                 (self.level == 'user' and session.username not in ['root', 'SYSTEM', 'hardware']) or \
                                     (self.level == 'low' and session.username in ['NetworkService']):
+                                # print('!!! removing ', session.username, )
                                 sus_pids.append(session.pid)
                                 obs.set_success(True)
             host = state.hosts[hostname]
