@@ -1,3 +1,12 @@
+# Submission Information
+
+- submission file located at [here](CybORG/Evaluation/submission/submission.py)
+- model checkpoints are saved [here](CybORG/Evaluation/submission/Models)
+- brief summary is [here](CybORG/Evaluation/submission/L1NNA_submission/L1NNA_CC3.pdf)
+- pre-built docker image: [l1nna/cc3:v0.0.1](https://hub.docker.com/layers/l1nna/cc3/v0.0.1/images/sha256-c076e7b922c881f8e03a75d02d89a8daf9b0fb6f470552c416e103566102574f)
+  - docker run -e PYTHONUNBUFFERED=1 l1nna/cc3:v0.0.1 
+- 1000 episodes result: -4969.657 with a standard deviation of 2285.1910702561786
+
 # Copyright DST Group. Licensed under the MIT license.
 
 # Cyber Operations Research Gym (CybORG)
