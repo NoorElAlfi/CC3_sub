@@ -29,9 +29,9 @@ class PPO:
 
         self.MSE_loss = nn.MSELoss()	# to calculate critic loss
 
-    def get_action(self, state, memory):
+    def get_action(self, state, memory, deterministic=False):
         state = torch.FloatTensor(state.reshape(1, -1)).to(device)  # flatten the state
-        action = self.old_policy.act(state, memory)
+        action = self.old_policy.act(state, memory, deterministic=deterministic)
         return action
 
     def update(self):

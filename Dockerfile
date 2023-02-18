@@ -5,6 +5,10 @@ FROM python:3.7.9
 # Set working directory to /cage
 WORKDIR /cage
 
+# cache dependencies
+COPY ./Requirements.txt /cage/Requirements.txt
+RUN pip install -r Requirements.txt
+
 # Copy local package requirements and init script into container's /cage folder
 COPY . /cage
 

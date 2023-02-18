@@ -45,8 +45,7 @@ class ActorCritic(nn.Module):
         # no sense following deterministic policy during training, so no memory needed
         else:
             max_actions = torch.argmax(action_probs, dim=1)
-            return max_actions
-
+            return max_actions.item()
 
     def evaluate(self, state, action):
         state_value = self.critic(state)
