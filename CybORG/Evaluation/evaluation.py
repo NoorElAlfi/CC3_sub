@@ -1,15 +1,13 @@
 import inspect
 import time
 from statistics import mean, stdev
-
 from CybORG import CybORG, CYBORG_VERSION
 from CybORG.Simulator.Scenarios import DroneSwarmScenarioGenerator
-
+from CybORG.Agents.PPO.PPO import PPO
 from datetime import datetime
 
 # this imports a submissions agents
-from CybORG.Evaluation.submission.submission import agents, wrap
-
+from CybORG.Evaluation.submission.submission import wrap
 
 def run_evaluation(name, team, name_of_agent, max_eps, write_to_file=True):
 
@@ -19,7 +17,7 @@ def run_evaluation(name, team, name_of_agent, max_eps, write_to_file=True):
     sg = DroneSwarmScenarioGenerator()
     cyborg = CybORG(sg, 'sim')
     wrapped_cyborg = wrap(cyborg)
-
+    agents = {f"blue_agent_{agent}": PPO(wrapped_cyborg.observation_space(f"blue_agent_{agent}").shape[0], len(wrapped_cyborg.get_action_space(f'blue_agent_{agent}')), 0.002, [0.9, 0.990], 0.99, 4, 0.2, True, '/cage/CybORG/Evaluation/submission/Models/5110.pth') for agent in range(18)}
     print(f'Using agents {agents}, if this is incorrect please update the code to load in your agent')
     if write_to_file:
         file_name = str(inspect.getfile(CybORG))[:-7] + '/Evaluation/' + time.strftime("%Y%m%d_%H%M%S")
@@ -40,7 +38,7 @@ def run_evaluation(name, team, name_of_agent, max_eps, write_to_file=True):
         # cyborg.env.env.tracker.render()
         count = 0
         for j in range(500):
-            actions = {agent_name: agent.get_action(observations[agent_name], action_spaces[agent_name]) for agent_name, agent in agents.items() if agent_name in wrapped_cyborg.agents}
+            actions = {agent_name: agent.get_action(observations[agent_name], agent.memory) for agent_name, agent in agents.items() if agent_name in wrapped_cyborg.agents}
             observations, rew, done, info = wrapped_cyborg.step(actions)
             if all(done.values()):
                 break

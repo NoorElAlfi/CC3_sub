@@ -7,7 +7,9 @@ WORKDIR /cage
 
 # Copy local package requirements and init script into container's /cage folder
 COPY . /cage
-
+RUN apt-get update
+RUN apt-get install tree
+RUN tree
 # Install packages
 RUN pip install -e .
 
@@ -15,5 +17,5 @@ RUN pip install -e .
 # RUN pip install stable_baselines3
 
 # Run evaluation script
-ENTRYPOINT ["python", "/cage/CybORG/Evaluation/validation.py"]
+ENTRYPOINT ["python", "cage/CybORG/Evaluation/validation.py"]
 
